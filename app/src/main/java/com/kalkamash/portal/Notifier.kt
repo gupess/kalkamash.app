@@ -41,7 +41,7 @@ object Notifier {
     }
 
     fun save(c: Context, json: String) {
-        c.getSharedPreferences("kp", Context.MODE_PRIVATE).edit().putString("lec", json).apply()
+        c.getSharedPreferences("kp", Context.MODE_PRIVATE).edit().putString("lec", json).putBoolean("student", true).apply()
         schedule(c)
     }
 

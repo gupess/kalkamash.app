@@ -9,8 +9,8 @@ android {
         applicationId = "com.kalkamash.portal"
         minSdk = 29
         targetSdk = 34
-        versionCode = 16
-        versionName = "1.6"
+        versionCode = 17
+        versionName = "1.6.1"
     }
     signingConfigs {
         create("rel") {
@@ -40,4 +40,5 @@ dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.webkit:webkit:1.11.0")
+    implementation("androidx.work:work-runtime-ktx:2.9.1")
 }
