@@ -11,6 +11,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.PowerManager
+import android.provider.Settings
 import android.provider.MediaStore
 import android.util.Base64
 import android.webkit.*
@@ -73,6 +75,20 @@ class MainActivity : AppCompatActivity() {
 
         @JavascriptInterface
         fun setLectures(json: String) { Notifier.save(applicationContext, json) }
+
+        @JavascriptInterface
+        fun battery() {
+            runOnUiThread {
+                try {
+                    val pm = getSystemService(PowerManager::class.java)
+                    val uri = Uri.parse("package:" + packageName)
+                    if (!pm.isIgnoringBatteryOptimizations(packageName))
+                        startActivity(Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, uri))
+                    else
+                        startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, uri))
+                } catch (e: Exception) { toast("افتح إعدادات التطبيق ثم البطارية واختر بدون قيود") }
+            }
+        }
 
         @JavascriptInterface
         fun download(url: String, name: String) {
@@ -157,6 +173,15 @@ class MainActivity : AppCompatActivity() {
                 if (web.canGoBack()) web.goBack() else { isEnabled = false; onBackPressedDispatcher.onBackPressed() }
             }
         })
+        Notifier.heartbeat(this)
+        val kp = getSharedPreferences("kp", MODE_PRIVATE)
+        val pm = getSystemService(PowerManager::class.java)
+        if (!pm.isIgnoringBatteryOptimizations(packageName) && !kp.getBoolean("askedBat", false)) {
+            kp.edit().putBoolean("askedBat", true).apply()
+            try {
+                startActivity(Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:" + packageName)))
+            } catch (e: Exception) { }
+        }
         val req = PeriodicWorkRequestBuilder<PostsWorker>(15, TimeUnit.MINUTES)
             .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
             .build()
