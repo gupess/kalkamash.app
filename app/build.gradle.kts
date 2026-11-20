@@ -9,8 +9,8 @@ android {
         applicationId = "com.kalkamash.portal"
         minSdk = 29
         targetSdk = 34
-        versionCode = 18
-        versionName = "1.6.2"
+        versionCode = 20
+        versionName = "1.7.1"
     }
     signingConfigs {
         create("rel") {

@@ -133,7 +133,7 @@ class MainActivity : AppCompatActivity() {
             databaseEnabled = true
             mediaPlaybackRequiresUserGesture = false
             setSupportZoom(false)
-            userAgentString = userAgentString + " KalkamashApp/1.6"
+            userAgentString = userAgentString + " KalkamashApp/1.7"
         }
         CookieManager.getInstance().setAcceptCookie(true)
         web.addJavascriptInterface(Bridge(), "AndroidApp")

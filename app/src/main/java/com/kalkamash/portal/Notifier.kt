@@ -36,8 +36,9 @@ object Notifier {
             .setContentIntent(openApp(c))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .setOnlyAlertOnce(true)
             .build()
-        NotificationManagerCompat.from(c).notify((System.currentTimeMillis() % 100000).toInt(), n)
+        NotificationManagerCompat.from(c).notify((title + "|" + body).hashCode(), n)
     }
 
     private fun openApp(c: Context): PendingIntent = PendingIntent.getActivity(
@@ -69,7 +70,7 @@ object Notifier {
             val t = o.getLong("t")
             if (t <= now) continue
             val intent = Intent(c, AlarmReceiver::class.java)
-                .putExtra("title", o.getString("n")).putExtra("body", o.getString("b"))
+                .putExtra("title", o.getString("n")).putExtra("body", o.getString("b")).putExtra("t", t)
             val p = PendingIntent.getBroadcast(c, 1000 + k, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
             if (canExact(am)) am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, t, p)
             else am.setAlarmClock(AlarmManager.AlarmClockInfo(t, openApp(c)), p)
@@ -92,6 +93,8 @@ object Notifier {
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(c: Context, i: Intent) {
+        val t = i.getLongExtra("t", 0L)
+        if (t > 0L && System.currentTimeMillis() - t > 20 * 60 * 1000L) return
         Notifier.show(c, i.getStringExtra("title") ?: "بدأت المحاضرة الآن", i.getStringExtra("body") ?: "")
     }
 }
