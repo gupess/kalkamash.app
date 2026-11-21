@@ -10,7 +10,7 @@ import java.net.URL
 class PostsWorker(c: Context, p: WorkerParameters) : Worker(c, p) {
     override fun doWork(): Result {
         val sp = applicationContext.getSharedPreferences("kp", Context.MODE_PRIVATE)
-        if (!sp.getBoolean("student", false)) return Result.success()
+        if (!sp.getBoolean("student", false) || sp.getBoolean("fcm_ok", false)) return Result.success()
         return try {
             val url = URL("https://ukjrktjobxywlskizgqa.supabase.co/rest/v1/posts?select=id,kind,title,body,date,created_at&order=created_at.desc&limit=5")
             val cn = url.openConnection() as HttpURLConnection

@@ -46,6 +46,22 @@ object Notifier {
         PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
     )
 
+    private fun fcmOk(c: Context) = c.getSharedPreferences("kp", Context.MODE_PRIVATE).getBoolean("fcm_ok", false)
+
+    fun cancelLocal(c: Context) {
+        val am = c.getSystemService(AlarmManager::class.java)
+        for (i in 0 until SLOTS) {
+            PendingIntent.getBroadcast(
+                c, 1000 + i, Intent(c, AlarmReceiver::class.java),
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_NO_CREATE
+            )?.let { am.cancel(it) }
+        }
+        PendingIntent.getBroadcast(
+            c, 999, Intent(c, HeartbeatReceiver::class.java),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_NO_CREATE
+        )?.let { am.cancel(it) }
+    }
+
     private fun canExact(am: AlarmManager) = Build.VERSION.SDK_INT < 31 || am.canScheduleExactAlarms()
 
     fun save(c: Context, json: String) {
@@ -62,6 +78,7 @@ object Notifier {
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_NO_CREATE
             )?.let { am.cancel(it) }
         }
+        if (fcmOk(c)) return
         val now = System.currentTimeMillis()
         var k = 0
         for (i in 0 until arr.length()) {
@@ -80,6 +97,7 @@ object Notifier {
 
     // نبضة كل 10 دقائق لفحص التبليغات الجديدة حتى والتطبيق مغلق
     fun heartbeat(c: Context) {
+        if (fcmOk(c)) return
         val am = c.getSystemService(AlarmManager::class.java)
         val p = PendingIntent.getBroadcast(
             c, 999, Intent(c, HeartbeatReceiver::class.java),

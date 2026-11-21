@@ -91,6 +91,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         @JavascriptInterface
+        fun setUser(shift: String) { Fcm.setShift(applicationContext, shift) }
+
+        @JavascriptInterface
+        fun clearUser() { Fcm.clear(applicationContext) }
+
+        @JavascriptInterface
         fun download(url: String, name: String) {
             runOnUiThread {
                 try {
@@ -182,6 +188,7 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:" + packageName)))
             } catch (e: Exception) { }
         }
+        Fcm.init(this)
         val req = PeriodicWorkRequestBuilder<PostsWorker>(15, TimeUnit.MINUTES)
             .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
             .build()

@@ -9,8 +9,8 @@ android {
         applicationId = "com.kalkamash.portal"
         minSdk = 29
         targetSdk = 34
-        versionCode = 20
-        versionName = "1.7.1"
+        versionCode = 21
+        versionName = "1.7.2"
     }
     signingConfigs {
         create("rel") {
@@ -41,4 +41,11 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.webkit:webkit:1.11.0")
     implementation("androidx.work:work-runtime-ktx:2.9.1")
+    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+    implementation("com.google.firebase:firebase-messaging")
+}
+
+// يُفعَّل Firebase تلقائياً عند وجود الملف app/google-services.json
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
 }
