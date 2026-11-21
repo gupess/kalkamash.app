@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "526911162078",
+    "project_id": "app-1-40a20",
+    "storage_bucket": "app-1-40a20.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:526911162078:android:44da38c8d82893ff2ba44f",
+        "android_client_info": {
+          "package_name": "com.kalkamash.portal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAF0m0o0-eXd-en0hsuxlF8VDR9cSdVc94"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
